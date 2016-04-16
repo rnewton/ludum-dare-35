@@ -62,8 +62,7 @@ public class MovePlayer : MonoBehaviour
 
 		// Rotate to face mouse
 		Vector2 target = Camera.main.ScreenToWorldPoint (Input.mousePosition);
-		float angle = Mathf.Atan2(target.y, target.x) * Mathf.Rad2Deg;
-		rigidBody.rotation = angle;
+		rigidBody.rotation = Mathf.Atan2(target.y, target.x) * Mathf.Rad2Deg;
 	}
 
 	public void TriangleUpdate()
