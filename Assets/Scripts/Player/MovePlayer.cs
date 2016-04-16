@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-[RequireComponent(typeof(Rigidbody))]
+[RequireComponent(typeof(Rigidbody2D))]
 public class MovePlayer : MonoBehaviour
 {
 	public float speed = 600f;
@@ -13,54 +13,57 @@ public class MovePlayer : MonoBehaviour
 	private float attackTimer;
 
 	private Vector3 moveDirection = Vector3.zero;
-	private Rigidbody rigidBody;
+	private Rigidbody2D rigidBody;
 
 	private float minX;
 	private float maxX;
-	private float minZ;
-	private float maxZ;
+	private float minY;
+	private float maxY;
 
 	void Start()
 	{
 		// Get a reference to the rigidbody attached to the player
-		rigidBody = GetComponent<Rigidbody>();
+		rigidBody = GetComponent<Rigidbody2D>();
 
 		// Set values for constraining movement within the camera view
 		float xHalfDistance = Camera.main.orthographicSize * Camera.main.aspect;
-		float zHalfDistance = Camera.main.orthographicSize;
+		float yHalfDistance = Camera.main.orthographicSize;
 
 		minX = Camera.main.transform.position.x - xHalfDistance + 0.5f;
 		maxX = Camera.main.transform.position.x + xHalfDistance - 0.5f;
 
-		minZ = Camera.main.transform.position.z - zHalfDistance + 0.4f;
-		maxZ = Camera.main.transform.position.z + zHalfDistance - 0.5f;
+		minY = Camera.main.transform.position.y - yHalfDistance + 0.4f;
+		maxY = Camera.main.transform.position.y + yHalfDistance - 0.5f;
 	}
 
 	private void BaseUpdate() 
 	{
 		// Use input up and down for direction, multiplied by speed
-		moveDirection = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
+		moveDirection = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
 		moveDirection *= speed;
 
 		// Move Rigidbody
 		rigidBody.AddRelativeForce(moveDirection * Time.deltaTime);
 
 		// Constrain to camera viewport
+		float distance = Vector2.Distance (transform.position, Vector2.zero);
+
 		if (rigidBody.position.x < minX) {
-			rigidBody.AddForce(Vector3.right * speed * Time.deltaTime);
+			rigidBody.AddForce(Vector2.right * speed * distance * Time.deltaTime);
 		} else if (rigidBody.position.x > maxX) {
-			rigidBody.AddForce(Vector3.left * speed * Time.deltaTime);
+			rigidBody.AddForce(Vector2.left * speed * distance * Time.deltaTime);
 		}
 
-		if (rigidBody.position.z < minZ) {
-			rigidBody.AddForce(Vector3.forward * speed * Time.deltaTime);
-		} else if (rigidBody.position.z > maxZ) {
-			rigidBody.AddForce(Vector3.back * speed * Time.deltaTime);
+		if (rigidBody.position.y < minY) {
+			rigidBody.AddForce(Vector2.up * speed * distance * Time.deltaTime);
+		} else if (rigidBody.position.y > maxY) {
+			rigidBody.AddForce(Vector2.down * speed * distance * Time.deltaTime);
 		}
 
 		// Rotate to face mouse
-		Vector3 target = Camera.main.ScreenToWorldPoint (Input.mousePosition);
-		transform.LookAt (new Vector3 (target.x, 1, target.z));
+		Vector2 target = Camera.main.ScreenToWorldPoint (Input.mousePosition);
+		float angle = Mathf.Atan2(target.y, target.x) * Mathf.Rad2Deg;
+		rigidBody.rotation = angle;
 	}
 
 	public void TriangleUpdate()
