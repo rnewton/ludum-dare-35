@@ -15,6 +15,11 @@ public class StoreManager : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
 		Coins++;
 	}
 
+	public void CashMoneys()
+	{
+		Coins += 1000;
+	}
+
 	public void SpendCoins(int howMany)
 	{
 		if (howMany > Coins) {

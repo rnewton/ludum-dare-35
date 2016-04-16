@@ -143,7 +143,6 @@ public class MovePlayer : MonoBehaviour
 		}
 
 		attackTimer -= Time.deltaTime;
-		Attacking = false;
 	}
 
 	private void ResetAfterHexagonAttack()
