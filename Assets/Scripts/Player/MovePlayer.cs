@@ -40,29 +40,23 @@ public class MovePlayer : MonoBehaviour
 	{
 		// Use input up and down for direction, multiplied by speed
 		moveDirection = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
-		moveDirection *= speed;
-
-		// Move Rigidbody
-		rigidBody.AddRelativeForce(moveDirection * Time.deltaTime);
+		moveDirection *= speed * Time.deltaTime;
+		transform.Translate (moveDirection, Space.World);
 
 		// Constrain to camera viewport
 		float distance = Vector2.Distance (transform.position, Vector2.zero);
 
 		if (rigidBody.position.x < minX) {
-			rigidBody.AddForce(Vector2.right * speed * distance * Time.deltaTime);
+			rigidBody.AddForce(Vector2.right * speed * distance);
 		} else if (rigidBody.position.x > maxX) {
-			rigidBody.AddForce(Vector2.left * speed * distance * Time.deltaTime);
+			rigidBody.AddForce(Vector2.left * speed * distance);
 		}
 
 		if (rigidBody.position.y < minY) {
-			rigidBody.AddForce(Vector2.up * speed * distance * Time.deltaTime);
+			rigidBody.AddForce(Vector2.up * speed * distance);
 		} else if (rigidBody.position.y > maxY) {
-			rigidBody.AddForce(Vector2.down * speed * distance * Time.deltaTime);
+			rigidBody.AddForce(Vector2.down * speed * distance);
 		}
-
-		// Rotate to face mouse
-		Vector2 target = Camera.main.ScreenToWorldPoint (Input.mousePosition);
-		rigidBody.rotation = Mathf.Atan2(target.y, target.x) * Mathf.Rad2Deg;
 	}
 
 	public void TriangleUpdate()
@@ -70,7 +64,7 @@ public class MovePlayer : MonoBehaviour
 		BaseUpdate ();
 
 		if (attackTimer <= 0 && Input.GetButtonUp ("Attack")) {
-			Debug.Log ("Triangle Attack");
+			rigidBody.AddTorque (1000);
 			attackTimer = triangleAttackCooldown;
 		}
 
