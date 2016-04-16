@@ -4,23 +4,24 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody2D))]
 public class MovePlayer : MonoBehaviour
 {
-	public float speed = 20f;
-	public float triangleTorque = 1000f;
-	public float squareSpeed = 40f;
-	public Animator hexagonAnimator;
+	public float Speed = 20f;
+	public float TriangleTorque = 1000f;
+	public float SquareSpeed = 40f;
+	public Animator HexagonAnimator;
 
-	public float triangleAttackCooldown = 3f;
-	public float squareAttackCooldown = 3f;
-	public float hexagonAttackCooldown = 3f;
+	public bool Attacking { get; private set; }
 
-	public TrailRenderer trail;
-	public Color normalTrailColor;
-	public Color attackTrailColor;
+	public float TriangleAttackCooldown = 3f;
+	public float SquareAttackCooldown = 3f;
+	public float HexagonAttackCooldown = 3f;
+
+	public TrailRenderer Trail;
+	public Color NormalTrailColor;
+	public Color AttackTrailColor;
 
 	private float originalSpeed;
 
 	private float attackTimer;
-	private bool attacking;
 
 	private Vector3 moveDirection = Vector3.zero;
 	private Rigidbody2D rigidBody;
@@ -46,7 +47,7 @@ public class MovePlayer : MonoBehaviour
 		maxY = Camera.main.transform.position.y + yHalfDistance - 0.5f;
 
 		// Set defaults
-		originalSpeed = speed;
+		originalSpeed = Speed;
 		NormalTrail ();
 	}
 
@@ -54,33 +55,33 @@ public class MovePlayer : MonoBehaviour
 	{
 		// Use input up and down for direction, multiplied by speed
 		moveDirection = new Vector2 (Input.GetAxis ("Horizontal"), Input.GetAxis ("Vertical"));
-		moveDirection *= speed * Time.deltaTime;
+		moveDirection *= Speed * Time.deltaTime;
 		transform.Translate (moveDirection, Space.World);
 
 		// Constrain to camera viewport
 		float distance = Vector2.Distance (transform.position, Vector2.zero);
 
 		if (rigidBody.position.x < minX) {
-			rigidBody.AddForce(Vector2.right * speed * distance);
+			rigidBody.AddForce(Vector2.right * Speed * distance);
 		} else if (rigidBody.position.x > maxX) {
-			rigidBody.AddForce(Vector2.left * speed * distance);
+			rigidBody.AddForce(Vector2.left * Speed * distance);
 		}
 
 		if (rigidBody.position.y < minY) {
-			rigidBody.AddForce(Vector2.up * speed * distance);
+			rigidBody.AddForce(Vector2.up * Speed * distance);
 		} else if (rigidBody.position.y > maxY) {
-			rigidBody.AddForce(Vector2.down * speed * distance);
+			rigidBody.AddForce(Vector2.down * Speed * distance);
 		}
 	}
 
 	private void NormalTrail ()
 	{
-		trail.material.SetColor ("_Color", normalTrailColor);
+		Trail.material.SetColor ("_Color", NormalTrailColor);
 	}
 
 	private void AttackTrail ()
 	{
-		trail.material.SetColor ("_Color", attackTrailColor);
+		Trail.material.SetColor ("_Color", AttackTrailColor);
 	}
 
 	public void TriangleUpdate()
@@ -88,12 +89,12 @@ public class MovePlayer : MonoBehaviour
 		BaseUpdate ();
 
 		if (attackTimer <= 0 && Input.GetButtonUp ("Attack")) {
-			attacking = true;
+			Attacking = true;
 			AttackTrail ();
-			rigidBody.AddTorque (triangleTorque);
-			attackTimer = triangleAttackCooldown;
+			rigidBody.AddTorque (TriangleTorque);
+			attackTimer = TriangleAttackCooldown;
 
-			Invoke ("ResetAfterTriangleAttack", triangleAttackCooldown);
+			Invoke ("ResetAfterTriangleAttack", TriangleAttackCooldown);
 		}
 
 		attackTimer -= Time.deltaTime;
@@ -101,7 +102,7 @@ public class MovePlayer : MonoBehaviour
 
 	private void ResetAfterTriangleAttack()
 	{
-		attacking = false;
+		Attacking = false;
 		NormalTrail ();
 	}
 
@@ -110,12 +111,12 @@ public class MovePlayer : MonoBehaviour
 		BaseUpdate ();
 
 		if (attackTimer <= 0 && Input.GetButtonUp ("Attack")) {
-			attacking = true;
+			Attacking = true;
 			AttackTrail ();
-			speed = squareSpeed;
-			attackTimer = squareAttackCooldown;
+			Speed = SquareSpeed;
+			attackTimer = SquareAttackCooldown;
 
-			Invoke ("ResetAfterSquareAttack", squareAttackCooldown);
+			Invoke ("ResetAfterSquareAttack", SquareAttackCooldown);
 		}
 
 		attackTimer -= Time.deltaTime;
@@ -123,8 +124,8 @@ public class MovePlayer : MonoBehaviour
 
 	private void ResetAfterSquareAttack()
 	{
-		speed = originalSpeed;
-		attacking = false;
+		Speed = originalSpeed;
+		Attacking = false;
 		NormalTrail ();
 	}
 
@@ -133,22 +134,22 @@ public class MovePlayer : MonoBehaviour
 		BaseUpdate ();
 
 		if (attackTimer <= 0 && Input.GetButtonUp ("Attack")) {
-			attacking = true;
+			Attacking = true;
 			AttackTrail ();
-			hexagonAnimator.SetBool ("attacking", true);
-			attackTimer = hexagonAttackCooldown;
+			HexagonAnimator.SetBool ("attacking", true);
+			attackTimer = HexagonAttackCooldown;
 
-			Invoke ("ResetAfterHexagonAttack", hexagonAttackCooldown);
+			Invoke ("ResetAfterHexagonAttack", HexagonAttackCooldown);
 		}
 
 		attackTimer -= Time.deltaTime;
-		attacking = false;
+		Attacking = false;
 	}
 
 	private void ResetAfterHexagonAttack()
 	{
-		hexagonAnimator.SetBool ("attacking", false);
-		attacking = false;
+		HexagonAnimator.SetBool ("attacking", false);
+		Attacking = false;
 		NormalTrail ();
 	}
 }
