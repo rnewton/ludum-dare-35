@@ -1,6 +1,7 @@
 ﻿using CoinFlipGames.FSM;
 using System;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerState : MonoBehaviour
 {
@@ -17,6 +18,7 @@ public class PlayerState : MonoBehaviour
 	}
 
 	private MovePlayer movementScript;
+	private StoreManager store;
 
 	// Use this for initialization
 	void Start ()
@@ -59,20 +61,37 @@ public class PlayerState : MonoBehaviour
 				hexagonShape.SetActive(false);
 			}
 		);
+
+		// Find the game UI and bind on the purchase events
+		store = GameObject.Find ("GameUI").GetComponent<StoreManager> ();
+
+		var buyTriangleButton = GameObject.Find("BuyTriangle").GetComponent<Button> ();
+		buyTriangleButton.onClick.AddListener(SwitchToTriangle);
+
+		var buySquareButton = GameObject.Find("BuySquare").GetComponent<Button> ();
+		buySquareButton.onClick.AddListener(SwitchToSquare);
+
+		var buyHexagonButton = GameObject.Find("BuyHexagon").GetComponent<Button> ();
+		buyHexagonButton.onClick.AddListener(SwitchToHexagon);
 	}
 
-	void Update ()
+	private void SwitchToTriangle()
 	{
-		// Temporary controls for switching shape
-		if (Input.GetButtonUp ("SwitchToTriangle")) {
+		if (store.Purchased) {
 			ShapeState.Switch (Shape.Triangle);
 		}
+	}
 
-		if (Input.GetButtonUp ("SwitchToSquare")) {
+	private void SwitchToSquare()
+	{
+		if (store.Purchased) {
 			ShapeState.Switch (Shape.Square);
 		}
+	}
 
-		if (Input.GetButtonUp ("SwitchToHexagon")) {
+	private void SwitchToHexagon()
+	{
+		if (store.Purchased) {
 			ShapeState.Switch (Shape.Hexagon);
 		}
 	}

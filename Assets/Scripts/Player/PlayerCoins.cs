@@ -2,17 +2,17 @@
 
 public class PlayerCoins : MonoBehaviour
 {
-	public int Coins { get; private set; }
+	private StoreManager store;
 
-	public void AddCoin()
+	void Start ()
 	{
-		Coins++;
+		store = GameObject.Find ("GameUI").GetComponent<StoreManager> ();
 	}
 
 	void OnTriggerEnter2D(Collider2D c)
 	{
 		if (c.gameObject.CompareTag ("Coin")) {
-			AddCoin ();
+			store.AddCoin ();
 			Destroy (c.gameObject);
 		}
 	}
