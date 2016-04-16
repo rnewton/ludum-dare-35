@@ -60,4 +60,20 @@ public class PlayerState : MonoBehaviour
 			}
 		);
 	}
+
+	void Update ()
+	{
+		// Temporary controls for switching shape
+		if (Input.GetButtonUp ("SwitchToTriangle")) {
+			ShapeState.Switch (Shape.Triangle);
+		}
+
+		if (Input.GetButtonUp ("SwitchToSquare")) {
+			ShapeState.Switch (Shape.Square);
+		}
+
+		if (Input.GetButtonUp ("SwitchToHexagon")) {
+			ShapeState.Switch (Shape.Hexagon);
+		}
+	}
 }

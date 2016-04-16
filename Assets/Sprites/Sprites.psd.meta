@@ -1,6 +1,6 @@
 fileFormatVersion: 2
 guid: 7fbdbc03be30846f0ba14136b515ea5e
-timeCreated: 1460812640
+timeCreated: 1460819011
 licenseType: Free
 TextureImporter:
   fileIDToRecycleName:
@@ -9,6 +9,7 @@ TextureImporter:
     21300004: Sprites_2
     21300006: Sprites_3
     21300008: Sprites_4
+    21300010: Sprites_5
   serializedVersion: 2
   mipmaps:
     mipMapMode: 0
@@ -108,6 +109,47 @@ TextureImporter:
     - name: Sprites_2
       rect:
         serializedVersion: 2
+        x: 442
+        y: 489
+        width: 76
+        height: 76
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -36, y: 38}
+        - {x: -38, y: 34}
+        - {x: -38, y: -28}
+        - {x: -35, y: -38}
+        - {x: 35, y: -38}
+        - {x: 38, y: -29}
+        - {x: 38, y: 32}
+        - {x: 33, y: 38}
+      - - {x: -16, y: -15}
+        - {x: -15, y: 16}
+        - {x: 16, y: 15}
+        - {x: 15, y: -16}
+    - name: Sprites_3
+      rect:
+        serializedVersion: 2
+        x: 641
+        y: 512
+        width: 225
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -92.5, y: -32}
+        - {x: 95.5, y: -32}
+        - {x: 112.5, y: -9}
+        - {x: 112.5, y: 8}
+        - {x: 62.5, y: 32}
+        - {x: -112.5, y: 32}
+        - {x: -112.5, y: -14}
+    - name: Sprites_4
+      rect:
+        serializedVersion: 2
         x: 41
         y: 139
         width: 370
@@ -152,30 +194,7 @@ TextureImporter:
         - {x: 185, y: -53}
         - {x: 185, y: -37}
         - {x: 180, y: -19}
-    - name: Sprites_3
-      rect:
-        serializedVersion: 2
-        x: 442
-        y: 489
-        width: 76
-        height: 76
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline:
-      - - {x: -36, y: 38}
-        - {x: -38, y: 34}
-        - {x: -38, y: -28}
-        - {x: -35, y: -38}
-        - {x: 35, y: -38}
-        - {x: 38, y: -29}
-        - {x: 38, y: 32}
-        - {x: 33, y: 38}
-      - - {x: -16, y: -15}
-        - {x: -15, y: 16}
-        - {x: 16, y: 15}
-        - {x: 15, y: -16}
-    - name: Sprites_4
+    - name: Sprites_5
       rect:
         serializedVersion: 2
         x: 520

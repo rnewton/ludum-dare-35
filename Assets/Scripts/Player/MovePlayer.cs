@@ -4,13 +4,23 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody2D))]
 public class MovePlayer : MonoBehaviour
 {
-	public float speed = 600f;
+	public float speed = 20f;
+	public float triangleTorque = 1000f;
+	public float squareSpeed = 40f;
+	public Animator hexagonAnimator;
 
 	public float triangleAttackCooldown = 3f;
 	public float squareAttackCooldown = 3f;
 	public float hexagonAttackCooldown = 3f;
 
+	public TrailRenderer trail;
+	public Color normalTrailColor;
+	public Color attackTrailColor;
+
+	private float originalSpeed;
+
 	private float attackTimer;
+	private bool attacking;
 
 	private Vector3 moveDirection = Vector3.zero;
 	private Rigidbody2D rigidBody;
@@ -34,12 +44,16 @@ public class MovePlayer : MonoBehaviour
 
 		minY = Camera.main.transform.position.y - yHalfDistance + 0.4f;
 		maxY = Camera.main.transform.position.y + yHalfDistance - 0.5f;
+
+		// Set defaults
+		originalSpeed = speed;
+		NormalTrail ();
 	}
 
 	private void BaseUpdate() 
 	{
 		// Use input up and down for direction, multiplied by speed
-		moveDirection = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
+		moveDirection = new Vector2 (Input.GetAxis ("Horizontal"), Input.GetAxis ("Vertical"));
 		moveDirection *= speed * Time.deltaTime;
 		transform.Translate (moveDirection, Space.World);
 
@@ -59,16 +73,36 @@ public class MovePlayer : MonoBehaviour
 		}
 	}
 
+	private void NormalTrail ()
+	{
+		trail.material.SetColor ("_Color", normalTrailColor);
+	}
+
+	private void AttackTrail ()
+	{
+		trail.material.SetColor ("_Color", attackTrailColor);
+	}
+
 	public void TriangleUpdate()
 	{
 		BaseUpdate ();
 
 		if (attackTimer <= 0 && Input.GetButtonUp ("Attack")) {
-			rigidBody.AddTorque (1000);
+			attacking = true;
+			AttackTrail ();
+			rigidBody.AddTorque (triangleTorque);
 			attackTimer = triangleAttackCooldown;
+
+			Invoke ("ResetAfterTriangleAttack", triangleAttackCooldown);
 		}
 
 		attackTimer -= Time.deltaTime;
+	}
+
+	private void ResetAfterTriangleAttack()
+	{
+		attacking = false;
+		NormalTrail ();
 	}
 
 	public void SquareUpdate()
@@ -76,11 +110,22 @@ public class MovePlayer : MonoBehaviour
 		BaseUpdate ();
 
 		if (attackTimer <= 0 && Input.GetButtonUp ("Attack")) {
-			Debug.Log ("Square Attack");
+			attacking = true;
+			AttackTrail ();
+			speed = squareSpeed;
 			attackTimer = squareAttackCooldown;
+
+			Invoke ("ResetAfterSquareAttack", squareAttackCooldown);
 		}
 
 		attackTimer -= Time.deltaTime;
+	}
+
+	private void ResetAfterSquareAttack()
+	{
+		speed = originalSpeed;
+		attacking = false;
+		NormalTrail ();
 	}
 
 	public void HexagonUpdate()
@@ -88,10 +133,22 @@ public class MovePlayer : MonoBehaviour
 		BaseUpdate ();
 
 		if (attackTimer <= 0 && Input.GetButtonUp ("Attack")) {
-			Debug.Log ("Hexagon Attack");
+			attacking = true;
+			AttackTrail ();
+			hexagonAnimator.SetBool ("attacking", true);
 			attackTimer = hexagonAttackCooldown;
+
+			Invoke ("ResetAfterHexagonAttack", hexagonAttackCooldown);
 		}
 
 		attackTimer -= Time.deltaTime;
+		attacking = false;
+	}
+
+	private void ResetAfterHexagonAttack()
+	{
+		hexagonAnimator.SetBool ("attacking", false);
+		attacking = false;
+		NormalTrail ();
 	}
 }
