@@ -14,13 +14,15 @@
 		} else if (rigidBody.position.y > maxY) {
 			rigidBody.AddForce(Vector2.down * speed * distance * Time.deltaTime);
 		}
-    }    public void Attack()    {        if (rigidBody.velocity.magnitude > maxVelocity)
+    }    private void dampen()
+    {
+        float velocityMag = Math.Abs(rigidBody.velocity.magnitude);
+        if (velocityMag > maxVelocity)
         {
-            moveDirection = -0.5f * rigidBody.velocity;
-        } else
-        {
-            moveDirection = -gameObject.transform.position.normalized;        }        Vector2 playerVector = rigidBody.position - player.GetComponent<Rigidbody2D>().position;        if (Math.Abs(playerVector.magnitude) <= playerDistance)        {            moveDirection += new Vector3(UnityEngine.Random.Range(0f, playerFrightVariation), UnityEngine.Random.Range(0f, playerFrightVariation), 0);        }		moveDirection *= speed;		// Move Rigidbody		rigidBody.AddRelativeForce(moveDirection * Time.deltaTime);        constrainMovement();    }    public void Flee()    {        if (rigidBody.velocity.magnitude > maxVelocity)        {            moveDirection = -0.5f * rigidBody.velocity;        }
-        else        {            float closestXEdge = Math.Abs(rigidBody.position.x - minX) < Math.Abs(rigidBody.position.x - maxX) ? minX : maxX;            float closestYEdge = Math.Abs(rigidBody.position.y - minY) < Math.Abs(rigidBody.position.y - maxY) ? minY : maxY;            moveDirection = rigidBody.position - new Vector2(closestXEdge, closestYEdge);            moveDirection.Normalize();
-        }        Vector2 playerVector = rigidBody.position - player.GetComponent<Rigidbody2D>().position;        if (Math.Abs(playerVector.magnitude) <= playerDistance)
+            rigidBody.AddRelativeForce(-1.0f * (velocityMag / maxVelocity) * rigidBody.velocity * rigidBody.mass);
+        }
+    }    public void Attack()    {        dampen();
+        moveDirection = -gameObject.transform.position.normalized;        Vector2 playerVector = rigidBody.position - player.GetComponent<Rigidbody2D>().position;        if (Math.Abs(playerVector.magnitude) <= playerDistance)        {            moveDirection += new Vector3(UnityEngine.Random.Range(0f, playerFrightVariation), UnityEngine.Random.Range(0f, playerFrightVariation), 0);        }		moveDirection *= speed;		// Move Rigidbody		rigidBody.AddRelativeForce(moveDirection * Time.deltaTime);        constrainMovement();    }    public void Flee()    {        dampen();        float closestXEdge = Math.Abs(rigidBody.position.x - minX) < Math.Abs(rigidBody.position.x - maxX) ? minX : maxX;        float closestYEdge = Math.Abs(rigidBody.position.y - minY) < Math.Abs(rigidBody.position.y - maxY) ? minY : maxY;        moveDirection = rigidBody.position - new Vector2(closestXEdge, closestYEdge);        moveDirection.Normalize();
+        Vector2 playerVector = rigidBody.position - player.GetComponent<Rigidbody2D>().position;        if (Math.Abs(playerVector.magnitude) <= playerDistance)
         {
             moveDirection += new Vector3(UnityEngine.Random.Range(0f, playerFrightVariation), UnityEngine.Random.Range(0f, playerFrightVariation), 0);        }        moveDirection *= speed;		rigidBody.AddRelativeForce(moveDirection * Time.deltaTime);        constrainMovement();    }}
