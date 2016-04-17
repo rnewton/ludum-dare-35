@@ -25,11 +25,14 @@
 
         if (player != null)
         {
-            gameObject.transform.position = homePosition;
-            gameObject.transform.rotation = homeRotation;
-            state = states.Home;
+            goHome();
         } else
         {
             collideWithEnemy(collider);
         }
+    }    public void goHome()
+    {
+        gameObject.transform.position = homePosition;
+        gameObject.transform.rotation = homeRotation;
+        state = states.Home;
     }}

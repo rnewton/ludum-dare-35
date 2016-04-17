@@ -63,6 +63,14 @@
 
         DodecagramPiece piece = gameObject.GetComponentInChildren<DodecagramPiece>();        if (piece != null)
         {
-            piece.gameObject.transform.SetParent(dodecagram.transform);
-            piece.state = DodecagramPiece.states.Dropped;
+            if (piece.gameObject.transform.position.x <= minX || piece.gameObject.transform.position.x >= maxX ||
+                piece.gameObject.transform.position.y <= minY || piece.gameObject.transform.position.y >= maxY)
+            {
+                piece.gameObject.transform.SetParent(dodecagram.transform);
+                piece.goHome();
+            } else
+            {
+                piece.gameObject.transform.SetParent(dodecagram.transform);
+                piece.state = DodecagramPiece.states.Dropped;
+            }
         }		// Effects		GameObject particles = (GameObject)Instantiate (blobParticlesPrefab, transform.position, Quaternion.identity);		Destroy (particles, 1f);		soundEffectManager.PlayClip ("splat" + UnityEngine.Random.Range (1, 4));    }}
