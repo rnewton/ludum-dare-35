@@ -12,7 +12,7 @@ public class PlayerState : MonoBehaviour
 	public GameObject ShapeChangePrefab;
 
 	public StateMachine ShapeState;
-	private enum Shape
+	public enum Shape
 	{
 		Triangle,
 		Square,
@@ -83,5 +83,10 @@ public class PlayerState : MonoBehaviour
 	{
 		var particles = Instantiate (ShapeChangePrefab, transform.position, Quaternion.identity);
 		Destroy (particles, 1f);
+	}
+
+	public string CurrentShape()
+	{
+		return ShapeState.CurrentState.ToString ();
 	}
 }
