@@ -9,6 +9,8 @@ public class PlayerState : MonoBehaviour
 	public GameObject squareShape;
 	public GameObject hexagonShape;
 
+	public GameObject ShapeChangePrefab;
+
 	public StateMachine ShapeState;
 	private enum Shape
 	{
@@ -28,8 +30,8 @@ public class PlayerState : MonoBehaviour
 		ShapeState.AddState(
 			Shape.Triangle,
 			(previous) => { 
-				Debug.Log ("∆"); 
 				triangleShape.SetActive(true);
+				SpawnShapeChangeParticles ();
 			},
 			movementScript.TriangleUpdate,
 			(next) => {
@@ -40,8 +42,8 @@ public class PlayerState : MonoBehaviour
 		ShapeState.AddState(
 			Shape.Square,
 			(previous) => {
-				Debug.Log ("□");
 				squareShape.SetActive(true);
+				SpawnShapeChangeParticles ();
 			},
 			movementScript.SquareUpdate,
 			(next) => {
@@ -52,8 +54,8 @@ public class PlayerState : MonoBehaviour
 		ShapeState.AddState(
 			Shape.Hexagon,
 			(previous) => {
-				Debug.Log ('\u2B21'); 
 				hexagonShape.SetActive(true);
+				SpawnShapeChangeParticles ();
 			},
 			movementScript.HexagonUpdate,
 			(next) => {
@@ -75,5 +77,11 @@ public class PlayerState : MonoBehaviour
 	public void SwitchToHexagon()
 	{
 		ShapeState.Switch (Shape.Hexagon);
+	}
+
+	public void SpawnShapeChangeParticles()
+	{
+		var particles = Instantiate (ShapeChangePrefab, transform.position, Quaternion.identity);
+		Destroy (particles, 1f);
 	}
 }
