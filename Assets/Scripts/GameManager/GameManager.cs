@@ -11,17 +11,15 @@
     {
         spawnTimer += Time.deltaTime;
 
-        Debug.Log("waiting...");
         if (spawnTimer >= timeBetweenWaves)
         {
             startNewRound();
         }
     }    private void startNewRound()
     {
-        Debug.Log("new round go!");
         waveCount++;
         spawnTimer = 0;
-        blobsThisWave = (int)Math.Ceiling((double)blobsPerWave * (double)waveCount * (double)blobModPerWave);
+        blobsThisWave = (int)Math.Ceiling((double)blobsThisWave * (double)blobModPerWave);
         spawnTimeoutThisWave = spawnTimeoutThisWave * spawnModPerWave;
         blobCount = 0;
         transitioning = false;		playerAttacks.NewWave ();
@@ -29,7 +27,7 @@
     {
         spawnTimer += Time.deltaTime;
 
-        if (spawnTimer >= spawnTimeout) {
+        if (spawnTimer >= spawnTimeoutThisWave) {
             GameObject spawn = spawns[UnityEngine.Random.Range(0, spawns.Length)];
 
             GameObject enemy = (GameObject)Instantiate(blobPrefab, 
@@ -37,7 +35,8 @@
                 Quaternion.identity
             );
             enemy.tag = "Enemy";
-            enemy.GetComponent<Rigidbody2D>().AddRelativeForce(-enemy.transform.position.normalized * 10);
+            enemy.layer = 8;
+            enemy.GetComponent<Rigidbody2D>().AddForce(-enemy.transform.position.normalized * enemy.GetComponent<BlobBehavior>().speed);
 
             spawnTimer = 0f;
             blobCount++;
