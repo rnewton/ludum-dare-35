@@ -26,10 +26,10 @@
         {
             rigidBody.velocity = (-1f * (velocityMag / maxVelocity) * rigidBody.velocity * rigidBody.mass);
         }
-    }    public void Attack()    {        dampen();        moveDirection = -gameObject.transform.position.normalized;        moveDirection += getPlayerAvoidance();		moveDirection *= speed;		// Move Rigidbody		rigidBody.AddRelativeForce(moveDirection * Time.deltaTime);        constrainMovement();    }    public void Flee()    {        dampen();        float closestXEdge = Math.Abs(rigidBody.position.x - minX) < Math.Abs(rigidBody.position.x - maxX) ? minX : maxX;        float closestYEdge = Math.Abs(rigidBody.position.y - minY) < Math.Abs(rigidBody.position.y - maxY) ? minY : maxY;        moveDirection = rigidBody.position - new Vector2(closestXEdge, closestYEdge);        moveDirection.Normalize();
+    }    public void Attack()    {        moveDirection = -gameObject.transform.position.normalized;        moveDirection += getPlayerAvoidance();		moveDirection *= speed;		// Move Rigidbody		rigidBody.AddRelativeForce(moveDirection * Time.deltaTime);        constrainMovement();        dampen();    }    public void Flee()    {        float closestXEdge = Math.Abs(rigidBody.position.x - minX) < Math.Abs(rigidBody.position.x - maxX) ? minX : maxX;        float closestYEdge = Math.Abs(rigidBody.position.y - minY) < Math.Abs(rigidBody.position.y - maxY) ? minY : maxY;        moveDirection = rigidBody.position - new Vector2(closestXEdge, closestYEdge);        moveDirection.Normalize();
 
         moveDirection += getPlayerAvoidance();
-        moveDirection *= speed;		rigidBody.AddRelativeForce(moveDirection * Time.deltaTime);        constrainMovement();    }    private Vector3 getPlayerAvoidance()
+        moveDirection *= speed;		rigidBody.AddRelativeForce(moveDirection * Time.deltaTime);        constrainMovement();        dampen();    }    private Vector3 getPlayerAvoidance()
     {
         Vector2 playerVector = rigidBody.position - player.GetComponent<Rigidbody2D>().position;
         float playerVecMagnitude = Math.Abs(playerVector.magnitude);

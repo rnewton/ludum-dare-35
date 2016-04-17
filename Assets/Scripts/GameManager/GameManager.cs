@@ -37,7 +37,7 @@
                 Quaternion.identity
             );
             enemy.tag = "Enemy";
-            enemy.GetComponent<Rigidbody2D>().AddRelativeForce(-enemy.transform.position);
+            enemy.GetComponent<Rigidbody2D>().AddRelativeForce(-enemy.transform.position.normalized * 10);
 
             spawnTimer = 0f;
             blobCount++;
