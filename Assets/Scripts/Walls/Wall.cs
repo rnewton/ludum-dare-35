@@ -2,16 +2,18 @@
 using System.Collections;
 
 public class Wall : MonoBehaviour {
+    private GameManager manager;
 
 	// Use this for initialization
 	void Start () {
-	
+        manager = GameObject.Find("Environment").GetComponent<GameManager>();	
 	}
 	
 	// Update is called once per frame
 	void Update () {
 	
 	}
+
     void OnTriggerEnter2D(Collider2D collider)
     {
         GameObject obj = collider.gameObject;
@@ -21,7 +23,7 @@ public class Wall : MonoBehaviour {
             if (obj.transform.GetComponentInChildren<DodecagramPiece>() != null)
             {
                 Destroy(obj);
-                Debug.Log("Blob escaped with piece!");
+                manager.notify();
             }
         }
     }
