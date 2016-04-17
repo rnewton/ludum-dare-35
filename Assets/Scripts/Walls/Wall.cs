@@ -23,7 +23,7 @@ public class Wall : MonoBehaviour {
             if (obj.transform.GetComponentInChildren<DodecagramPiece>() != null)
             {
                 Destroy(obj);
-                manager.notify();
+                manager.blobEscapedWithPiece();
             }
         }
     }
