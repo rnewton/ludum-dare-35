@@ -1,7 +1,7 @@
 ﻿﻿﻿using UnityEngine;using System.Collections;using System;public class BlobBehavior : MonoBehaviour {	public float speed = 600f;    public float playerDistance = 5f;    public float playerFrightMin = 10f;    public float playerFrightMax = 25f;    public float maxVelocity = 25f;    public GameObject coinPrefab;    public GameObject blobParticlesPrefab;	private Vector3 moveDirection = Vector3.zero;	private Rigidbody2D rigidBody;    private GameObject player;    private GameObject dodecagram;	private float minX;	private float maxX;	private float minY;	private float maxY;	private SoundEffectManager soundEffectManager;	void Start()	{		// Get a reference to the rigidbody attached to the player		rigidBody = GetComponent<Rigidbody2D>();        player = GameObject.Find("Player");        dodecagram = GameObject.Find("Dodecagram");		// Set values for constraining movement within the camera view		float xHalfDistance = Camera.main.orthographicSize * Camera.main.aspect;		float yHalfDistance = Camera.main.orthographicSize;		minX = Camera.main.transform.position.x - xHalfDistance + 0.5f;		maxX = Camera.main.transform.position.x + xHalfDistance - 0.5f;		minY = Camera.main.transform.position.y - yHalfDistance + 0.4f;		maxY = Camera.main.transform.position.y + yHalfDistance - 0.5f;
 
         soundEffectManager = GameObject.Find("SoundEffectManager").GetComponent<SoundEffectManager>();
-    }	// Update is called once per frame	void Update () {	}    private void constrainMovement()
+    }    private void constrainMovement()
     {
 		// Constrain to camera viewport
 		float distance = Vector2.Distance (transform.position, Vector2.zero);

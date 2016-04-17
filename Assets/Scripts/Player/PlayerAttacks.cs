@@ -3,6 +3,9 @@ using System.Collections;
 
 public class PlayerAttacks : MonoBehaviour
 {
+	public int TotalKillCount { get; private set; }
+	public int WaveKillCount { get; private set; }
+
 	private MovePlayer movement;
 	private CameraShake cameraShake;
 
@@ -18,6 +21,14 @@ public class PlayerAttacks : MonoBehaviour
 			cameraShake.Shake (0.5f, 0.1f, 1f);
             c.gameObject.GetComponent<BlobBehavior>().die();
 			Destroy (c.gameObject);
+
+			TotalKillCount++;
+			WaveKillCount++;
 		}
+	}
+
+	public void NewWave() // Hairdos
+	{
+		WaveKillCount = 0;
 	}
 }

@@ -1,4 +1,4 @@
-﻿using UnityEngine;using System.Collections;using System;public class GameManager : MonoBehaviour {    public float spawnTimeout = 10f;    public float spawnModPerWave = 0.95f;    public float timeBetweenWaves = 2f;    public int blobsPerWave = 10;    public float blobModPerWave = 1.1f;    public GameObject blobPrefab;    public GameObject environment;    private GameObject[] spawns;    private float spawnTimer;    private int blobCount = 0;    private int blobsThisWave;    private float spawnTimeoutThisWave;    private int waveCount = 1;    private bool transitioning = false;    // Use this for initialization    void Start () {        spawns = GameObject.FindGameObjectsWithTag("BlobSpawn");        spawnTimer = spawnTimeout;        blobsThisWave = blobsPerWave;        spawnTimeoutThisWave = spawnTimeout;	}		// Update is called once per frame	void Update () {        if (transitioning)
+﻿using UnityEngine;using System.Collections;using System;public class GameManager : MonoBehaviour {    public float spawnTimeout = 10f;    public float spawnModPerWave = 0.95f;    public float timeBetweenWaves = 2f;    public int blobsPerWave = 10;    public float blobModPerWave = 1.1f;    public GameObject blobPrefab;    public GameObject environment;    private GameObject[] spawns;    private float spawnTimer;    private int blobCount = 0;    private int blobsThisWave;    private float spawnTimeoutThisWave;    private int waveCount = 1;    private bool transitioning = false;	private PlayerAttacks playerAttacks;    // Use this for initialization    void Start () {        spawns = GameObject.FindGameObjectsWithTag("BlobSpawn");        spawnTimer = spawnTimeout;        blobsThisWave = blobsPerWave;        spawnTimeoutThisWave = spawnTimeout;		playerAttacks = GameObject.Find ("Player").GetComponent<PlayerAttacks> ();	}		// Update is called once per frame	void Update () {        if (transitioning)
         {
             waitBetweenWaves();
         }
@@ -7,7 +7,7 @@
             spawnTimer = 0f;            transitioning = true;        } else
         {
             spawnBlobs();
-        }    }    private void waitBetweenWaves()
+        }    }	public int BlobsThisWave()	{		return blobsThisWave;	}	public int WaveCount()	{		return waveCount;	}    private void waitBetweenWaves()
     {
         spawnTimer += Time.deltaTime;
 
@@ -24,7 +24,7 @@
         blobsThisWave = (int)Math.Ceiling((double)blobsPerWave * (double)waveCount * (double)blobModPerWave);
         spawnTimeoutThisWave = spawnTimeoutThisWave * spawnModPerWave;
         blobCount = 0;
-        transitioning = false;
+        transitioning = false;		playerAttacks.NewWave ();
     }    private void spawnBlobs()
     {
         spawnTimer += Time.deltaTime;
