@@ -31,10 +31,13 @@ public class MovePlayer : MonoBehaviour
 	private float minY;
 	private float maxY;
 
+	private SoundEffectManager soundEffectManager;
+
 	void Start()
 	{
 		// Get a reference to the rigidbody attached to the player
 		rigidBody = GetComponent<Rigidbody2D>();
+		soundEffectManager = GameObject.Find ("SoundEffectManager").GetComponent<SoundEffectManager> ();
 
 		// Set values for constraining movement within the camera view
 		float xHalfDistance = Camera.main.orthographicSize * Camera.main.aspect;
@@ -94,6 +97,7 @@ public class MovePlayer : MonoBehaviour
 			rigidBody.AddTorque (TriangleTorque);
 			attackTimer = TriangleAttackCooldown;
 
+			soundEffectManager.PlayClip ("triangleAttack");
 			Invoke ("ResetAfterTriangleAttack", TriangleAttackCooldown);
 		}
 
@@ -116,6 +120,7 @@ public class MovePlayer : MonoBehaviour
 			Speed = SquareSpeed;
 			attackTimer = SquareAttackCooldown;
 
+			soundEffectManager.PlayClip ("squareAttack");
 			Invoke ("ResetAfterSquareAttack", SquareAttackCooldown);
 		}
 
@@ -139,6 +144,7 @@ public class MovePlayer : MonoBehaviour
 			HexagonAnimator.SetBool ("attacking", true);
 			attackTimer = HexagonAttackCooldown;
 
+			soundEffectManager.PlayClip ("hexagonAttack");
 			Invoke ("ResetAfterHexagonAttack", HexagonAttackCooldown);
 		}
 
