@@ -6,6 +6,9 @@ public class WaveUI : MonoBehaviour
 	public Text WaveCountLabel;
 	public Text BlobCountLabel;
 
+	public GameObject WaveContainer;
+	public GameObject TimerContainer;
+
 	private GameManager gameManager;
 	private PlayerAttacks playerAttacks;
 
@@ -17,12 +20,20 @@ public class WaveUI : MonoBehaviour
 
 	void Update ()
 	{
-		WaveCountLabel.text = "Wave %d".Replace ("%d", gameManager.WaveCount ().ToString ());
+		if (gameManager.transitioning) {
+			WaveContainer.SetActive (false);
+			TimerContainer.SetActive (true);
+		} else {
+			WaveContainer.SetActive (true);
+			TimerContainer.SetActive (false);
 
-		int totalBlobs = gameManager.BlobsThisWave ();
+			WaveCountLabel.text = "Wave %d".Replace ("%d", gameManager.WaveCount ().ToString ());
 
-		BlobCountLabel.text = "%1$d/%2$d"
-			.Replace ("%1$d", (totalBlobs - playerAttacks.WaveKillCount).ToString ())
-			.Replace ("%2$d", totalBlobs.ToString ());
+			int totalBlobs = gameManager.BlobsThisWave ();
+
+			BlobCountLabel.text = "%1$d/%2$d"
+				.Replace ("%1$d", (totalBlobs - playerAttacks.WaveKillCount).ToString ())
+				.Replace ("%2$d", totalBlobs.ToString ());
+		}
 	}
 }
