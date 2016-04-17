@@ -7,6 +7,8 @@ public class StoreManager : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
 	public int Coins { get; private set; }
 	public bool Purchased { get; private set; }
 
+    public GameObject gameStatsTracker;
+
 	public Text UICoinCount;
 	public Animator StoreAnimator;
 
@@ -35,6 +37,8 @@ public class StoreManager : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
 	public void AddCoin()
 	{
 		Coins++;
+        gameStatsTracker.GetComponent<GameStats>().totalCoinsEarned++; 
+        gameStatsTracker.GetComponent<GameStats>().currentCoins = Coins; 
 	}
 
 	public void CashMoneys()
@@ -63,6 +67,7 @@ public class StoreManager : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
 		}
 
 		Coins -= howMany;
+        gameStatsTracker.GetComponent<GameStats>().currentCoins = Coins;
 		Purchased = true;
 
 		// Apply multipliers!

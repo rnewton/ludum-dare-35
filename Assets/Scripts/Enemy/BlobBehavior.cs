@@ -69,4 +69,4 @@
                 piece.gameObject.transform.SetParent(dodecagram.transform);
                 piece.state = DodecagramPiece.states.Dropped;
             }
-        }		// Effects		GameObject particles = (GameObject)Instantiate (blobParticlesPrefab, transform.position, Quaternion.identity);		Destroy (particles, 1f);		soundEffectManager.PlayClip ("splat" + UnityEngine.Random.Range (1, 4));        gameManager.decrementActiveBlobs();    }}
+        }		// Effects		GameObject particles = (GameObject)Instantiate (blobParticlesPrefab, transform.position, Quaternion.identity);		Destroy (particles, 1f);		soundEffectManager.PlayClip ("splat" + UnityEngine.Random.Range (1, 4));        gameManager.decrementActiveBlobs();        gameManager.gameStatsTracker.GetComponent<GameStats>().blobsKilled++;    }}
