@@ -11,9 +11,9 @@
         {
             notificationTimer -= Time.deltaTime;
 
-            if (notificationText.active == false)
+			if (notificationText.active == false)
             {
-                notificationText.active = true;
+				notificationText.SetActive(true);
             }
         } else
         {
@@ -23,7 +23,7 @@
             }
             else if (notificationText.active == true)
             {
-                notificationText.active = false;
+				notificationText.SetActive(false);
             }
         }        for (int i = 0; i < expiredBlobs.Count; i++)
         {
@@ -97,7 +97,7 @@
     {
         if (Time.timeScale == 0)
         {
-            Time.timeScale = 1;            pausePanel.active = false;
+            Time.timeScale = 1;			pausePanel.SetActive(false);
         } else
         {
-            Time.timeScale = 0;            pausePanel.active = true;        }    }}
+            Time.timeScale = 0;			pausePanel.SetActive(true);        }    }}
