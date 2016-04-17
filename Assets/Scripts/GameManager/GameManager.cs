@@ -1,4 +1,4 @@
-﻿using UnityEngine;using UnityEngine.SceneManagement;using System.Collections;using System;public class GameManager : MonoBehaviour {    public float spawnTimeout = 10f;    public float spawnModPerWave = 0.95f;    public float timeBetweenWaves = 2f;    public float notificationTimeout = 3f;    public int blobsPerWave = 10;    public float blobModPerWave = 1.1f;    public GameObject blobPrefab;    public GameObject environment;    public GameObject notificationText;    private GameObject[] spawns;    private int numPieces;    private float spawnTimer;    private int blobCount = 0;    private int blobsThisWave;    private float spawnTimeoutThisWave;    private int waveCount = 1;    public bool transitioning = false;    private float notificationTimer = 0f;	private PlayerAttacks playerAttacks;    // Use this for initialization    void Start () {        spawns = GameObject.FindGameObjectsWithTag("BlobSpawn");        spawnTimer = spawnTimeout;        blobsThisWave = blobsPerWave;        spawnTimeoutThisWave = spawnTimeout;		playerAttacks = GameObject.Find ("Player").GetComponent<PlayerAttacks> ();        numPieces = GameObject.Find("Dodecagram").GetComponentsInChildren<DodecagramPiece>().Length;	}		// Update is called once per frame	void Update () {        if (transitioning)
+﻿using UnityEngine;using UnityEngine.SceneManagement;using System.Collections;using System.Collections.Generic;using System;public class GameManager : MonoBehaviour {    public int maxActiveBlobs = 8;    public float spawnTimeoutMinimum = 0.1f;    public float spawnTimeout = 10f;    public float spawnModPerWave = 0.95f;    public float timeBetweenWaves = 2f;    public float notificationTimeout = 3f;    public int blobsPerWave = 10;    public float blobModPerWave = 1.1f;    public GameObject blobPrefab;    public GameObject environment;    public GameObject notificationText;    private GameObject[] spawns;    private List<GameObject> expiredBlobs;    private int numPieces;    private float spawnTimer;    private int blobCount = 0;    private int blobsThisWave;    private float spawnTimeoutThisWave;    private int waveCount = 1;    private int activeBlobs = 0;    public bool transitioning = false;    private float notificationTimer = 0f;	private PlayerAttacks playerAttacks;    // Use this for initialization    void Start () {        expiredBlobs = new List<GameObject>();        spawns = GameObject.FindGameObjectsWithTag("BlobSpawn");        spawnTimer = spawnTimeout;        blobsThisWave = blobsPerWave;        spawnTimeoutThisWave = spawnTimeout;		playerAttacks = GameObject.Find ("Player").GetComponent<PlayerAttacks> ();        numPieces = GameObject.Find("Dodecagram").GetComponentsInChildren<DodecagramPiece>().Length;	}		// Update is called once per frame	void Update () {        if (transitioning)
         {
             waitBetweenWaves();
         }
@@ -21,9 +21,13 @@
             {
                 notificationText.active = false;
             }
-        }    }    public void blobEscapedWithPiece()
+        }        for (int i = 0; i < expiredBlobs.Count; i++)
+        {
+            Destroy(expiredBlobs[i]);
+        }        expiredBlobs.Clear();    }    public void blobEscapedWithPiece()
     {
         numPieces--;
+        decrementActiveBlobs();
 
         if (numPieces == 0)
         {
@@ -46,13 +50,23 @@
         spawnTimer = 0;
         blobsThisWave = (int)Math.Ceiling((double)blobsThisWave * (double)blobModPerWave);
         spawnTimeoutThisWave = spawnTimeoutThisWave * spawnModPerWave;
+        if (spawnTimeoutThisWave < spawnTimeoutMinimum)
+        {
+            spawnTimeoutThisWave = spawnTimeoutMinimum;
+        }
+
         blobCount = 0;
         transitioning = false;		playerAttacks.NewWave ();
     }    private void spawnBlobs()
     {
         spawnTimer += Time.deltaTime;
 
-        if (spawnTimer >= spawnTimeoutThisWave) {
+        if (activeBlobs > maxActiveBlobs)
+        {
+            // performance optimization; wait til the # of active blobs is reduced
+            return;
+        }
+        else if (spawnTimer >= spawnTimeoutThisWave) {
             GameObject spawn = spawns[UnityEngine.Random.Range(0, spawns.Length)];
 
             GameObject enemy = (GameObject)Instantiate(blobPrefab, 
@@ -62,8 +76,16 @@
             enemy.tag = "Enemy";
             enemy.layer = 8;
             enemy.GetComponent<Rigidbody2D>().AddForce(-enemy.transform.position.normalized * enemy.GetComponent<BlobBehavior>().speed);
+            enemy.GetComponent<BlobBehavior>().gameManager = this;
 
             spawnTimer = 0f;
             blobCount++;
+            activeBlobs++;
         }
+    }    public void decrementActiveBlobs()
+    {
+        activeBlobs--;
+    }    public void queueBlobDeletion(GameObject blob)
+    {
+        expiredBlobs.Add(blob);
     }}
