@@ -18,7 +18,6 @@ public class PlayerState : MonoBehaviour
 	}
 
 	private MovePlayer movementScript;
-	private StoreManager store;
 
 	// Use this for initialization
 	void Start ()
@@ -61,38 +60,20 @@ public class PlayerState : MonoBehaviour
 				hexagonShape.SetActive(false);
 			}
 		);
-
-		// Find the game UI and bind on the purchase events
-		store = GameObject.Find ("GameUI").GetComponent<StoreManager> ();
-
-		var buyTriangleButton = GameObject.Find("BuyTriangle").GetComponent<Button> ();
-		buyTriangleButton.onClick.AddListener(SwitchToTriangle);
-
-		var buySquareButton = GameObject.Find("BuySquare").GetComponent<Button> ();
-		buySquareButton.onClick.AddListener(SwitchToSquare);
-
-		var buyHexagonButton = GameObject.Find("BuyHexagon").GetComponent<Button> ();
-		buyHexagonButton.onClick.AddListener(SwitchToHexagon);
 	}
 
-	private void SwitchToTriangle()
+	public void SwitchToTriangle()
 	{
-		if (store.Purchased) {
-			ShapeState.Switch (Shape.Triangle);
-		}
+		ShapeState.Switch (Shape.Triangle);
 	}
 
-	private void SwitchToSquare()
+	public void SwitchToSquare()
 	{
-		if (store.Purchased) {
-			ShapeState.Switch (Shape.Square);
-		}
+		ShapeState.Switch (Shape.Square);
 	}
 
-	private void SwitchToHexagon()
+	public void SwitchToHexagon()
 	{
-		if (store.Purchased) {
-			ShapeState.Switch (Shape.Hexagon);
-		}
+		ShapeState.Switch (Shape.Hexagon);
 	}
 }
