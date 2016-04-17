@@ -1,23 +1,7 @@
-﻿﻿﻿using UnityEngine;using System.Collections;using System;public class BlobBehavior : MonoBehaviour {	public float speed = 600f;    public float playerDistance = 5f;    public float playerFrightMin = 10f;    public float playerFrightMax = 25f;    public float maxVelocity = 25f;    public GameObject coinPrefab;    public GameObject blobParticlesPrefab;	private Vector3 moveDirection = Vector3.zero;	private Rigidbody2D rigidBody;    private GameObject player;    private GameObject dodecagram;	private float minX;	private float maxX;	private float minY;	private float maxY;	private SoundEffectManager soundEffectManager;	void Start()	{		// Get a reference to the rigidbody attached to the player		rigidBody = GetComponent<Rigidbody2D>();        player = GameObject.Find("Player");        dodecagram = GameObject.Find("Dodecagram");		// Set values for constraining movement within the camera view		float xHalfDistance = Camera.main.orthographicSize * Camera.main.aspect;		float yHalfDistance = Camera.main.orthographicSize;		minX = Camera.main.transform.position.x - xHalfDistance + 0.5f;		maxX = Camera.main.transform.position.x + xHalfDistance - 0.5f;		minY = Camera.main.transform.position.y - yHalfDistance + 0.4f;		maxY = Camera.main.transform.position.y + yHalfDistance - 0.5f;
+﻿﻿﻿using UnityEngine;using System.Collections;using System;public class BlobBehavior : MonoBehaviour {	public float speed = 600f;    public float playerDistance = 5f;    public float playerFrightMin = 10f;    public float playerFrightMax = 25f;    public float maxVelocity = 25f;    public GameObject coinPrefab;    public GameObject blobParticlesPrefab;    public float piecePosessionTimeout = 10f;	private Vector3 moveDirection = Vector3.zero;	private Rigidbody2D rigidBody;    private GameObject player;    private GameObject dodecagram;    private float piecePosessionTimer = 0f;	private float minX;	private float maxX;	private float minY;	private float maxY;	private SoundEffectManager soundEffectManager;	void Start()	{		// Get a reference to the rigidbody attached to the player		rigidBody = GetComponent<Rigidbody2D>();        player = GameObject.Find("Player");        dodecagram = GameObject.Find("Dodecagram");		// Set values for constraining movement within the camera view		float xHalfDistance = Camera.main.orthographicSize * Camera.main.aspect;		float yHalfDistance = Camera.main.orthographicSize;		minX = Camera.main.transform.position.x - xHalfDistance + 0.5f;		maxX = Camera.main.transform.position.x + xHalfDistance - 0.5f;		minY = Camera.main.transform.position.y - yHalfDistance + 0.4f;		maxY = Camera.main.transform.position.y + yHalfDistance - 0.5f;
 
         soundEffectManager = GameObject.Find("SoundEffectManager").GetComponent<SoundEffectManager>();
-    }    private void constrainMovement()
-    {
-		// Constrain to camera viewport
-		float distance = Vector2.Distance (transform.position, Vector2.zero);
-
-		if (rigidBody.position.x < minX) {
-			rigidBody.AddForce(Vector2.right * speed * distance * Time.deltaTime);
-		} else if (rigidBody.position.x > maxX) {
-			rigidBody.AddForce(Vector2.left * speed * distance * Time.deltaTime);
-		}
-
-		if (rigidBody.position.y < minY) {
-			rigidBody.AddForce(Vector2.up * speed * distance * Time.deltaTime);
-		} else if (rigidBody.position.y > maxY) {
-			rigidBody.AddForce(Vector2.down * speed * distance * Time.deltaTime);
-		}
-    }    private void dampen()
+    }	// Update is called once per frame	void Update () {	}    private void dampen()
     {
         float velocityMag = Math.Abs(rigidBody.velocity.magnitude);
 
@@ -26,10 +10,18 @@
         {
             rigidBody.velocity = (-1f * (velocityMag / maxVelocity) * rigidBody.velocity * rigidBody.mass);
         }
-    }    public void Attack()    {        moveDirection = -gameObject.transform.position.normalized;        moveDirection += getPlayerAvoidance();		moveDirection *= speed;		// Move Rigidbody		rigidBody.AddRelativeForce(moveDirection * Time.deltaTime);        constrainMovement();        dampen();    }    public void Flee()    {        float closestXEdge = Math.Abs(rigidBody.position.x - minX) < Math.Abs(rigidBody.position.x - maxX) ? minX : maxX;        float closestYEdge = Math.Abs(rigidBody.position.y - minY) < Math.Abs(rigidBody.position.y - maxY) ? minY : maxY;        moveDirection = rigidBody.position - new Vector2(closestXEdge, closestYEdge);        moveDirection.Normalize();
+    }    public void Attack()    {        moveDirection = -gameObject.transform.position.normalized;        moveDirection += getPlayerAvoidance();		moveDirection *= speed;		// Move Rigidbody		rigidBody.AddRelativeForce(moveDirection * Time.deltaTime);        dampen();    }    public void Flee()    {        float closestXEdge = Math.Abs(rigidBody.position.x - minX) < Math.Abs(rigidBody.position.x - maxX) ? minX : maxX;
+        float closestYEdge = Math.Abs(rigidBody.position.y - minY) < Math.Abs(rigidBody.position.y - maxY) ? minY : maxY;
+
+        moveDirection = rigidBody.position - new Vector2(closestXEdge, closestYEdge);
+        moveDirection.Normalize();
 
         moveDirection += getPlayerAvoidance();
-        moveDirection *= speed;		rigidBody.AddRelativeForce(moveDirection * Time.deltaTime);        constrainMovement();        dampen();    }    private Vector3 getPlayerAvoidance()
+
+        moveDirection *= speed;
+
+        rigidBody.AddRelativeForce(moveDirection * Time.deltaTime);
+        dampen();    }    private Vector3 getPlayerAvoidance()
     {
         Vector2 playerVector = rigidBody.position - player.GetComponent<Rigidbody2D>().position;
         float playerVecMagnitude = Math.Abs(playerVector.magnitude);
