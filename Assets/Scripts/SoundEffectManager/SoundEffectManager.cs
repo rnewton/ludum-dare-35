@@ -21,7 +21,6 @@ public class SoundEffectManager : MonoBehaviour
 
 	public void PlayClip(string name)
 	{
-		Debug.Log (name);
 		if (namedClips.ContainsKey (name)) {
 			source.PlayOneShot (namedClips [name]);
 		} else {
