@@ -63,7 +63,7 @@ namespace CoinFlipGames.FSM
 			this.states = new Dictionary<Enum, State> ();
 		}
 
-		void Update ()
+		void FixedUpdate ()
 		{
 			if (null != this.currentState) {
 				this.currentState.OnUpdate ();

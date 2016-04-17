@@ -58,7 +58,7 @@
                     -5
                 ), 
                 Quaternion.identity
-            );
+            );			// Remove the coin after 15 seconds if it doesn't get picked up			Destroy (coin, 15f);
         }
 
         DodecagramPiece piece = gameObject.GetComponentInChildren<DodecagramPiece>();        if (piece != null)

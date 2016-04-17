@@ -11,7 +11,7 @@ public class PlayerCoins : MonoBehaviour
 		soundEffectManager = GameObject.Find ("SoundEffectManager").GetComponent<SoundEffectManager> ();
 	}
 
-	void OnTriggerEnter2D(Collider2D c)
+	void OnCollisionEnter2D(Collision2D c)
 	{
 		if (c.gameObject.CompareTag ("Coin")) {
 			store.AddCoin ();
