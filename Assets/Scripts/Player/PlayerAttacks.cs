@@ -16,6 +16,7 @@ public class PlayerAttacks : MonoBehaviour
 	{
 		if (c.gameObject.CompareTag ("Enemy") && movement.Attacking) {
 			cameraShake.Shake (0.5f, 0.1f, 1f);
+            c.gameObject.GetComponent<BlobBehavior>().die();
 			Destroy (c.gameObject);
 		}
 	}
